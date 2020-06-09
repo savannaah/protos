@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package itemproto;
+
+message RequestHeader {
+    string token = 1;
+}
+
+message Levy {
+    int32 id = 1;
+    string name = 2;
+    float rate = 3;
+    double amount = 4;
+}
+
+message RequestField {
+    int32 warehouse = 1;
+    int32 vendor = 2;
+    string name = 3;
+    string description = 4;
+    int32 category = 5;
+    string brandName = 6;
+    string modelNumber = 7;
+    double  netCost = 8;
+    repeated Levy levies = 9;
+    double sellingCostBeforeTax = 10;
+    float sellingTaxRate = 11;
+}
+
+message RawRequest {
+    RequestHeader header = 1;
+}
+
+message GetRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+}
+
+message CreateRequest {
+    RequestHeader header = 1;
+    RequestField field = 2;
+}
+
+message UpdateRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    RequestField field = 3;
+}
+
+message ActionRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    string name = 3;
+}
+
+message ProductQuantityRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    message Data {
+        int32 reservedQuantity = 1;
+        int32 availableQuantity = 2;
+    }
+    Data data = 3;
+}
+
+message DataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string id = 1;
+        int32 warehouseID = 2;
+        string warehouse = 3;
+        int32 vendorID = 4;
+        string vendor = 5;
+        int32 categoryID = 6;
+        string category = 7;
+        string name = 8;
+        string description = 9;
+        string skuNumber = 10;
+        string brandName = 11;
+        string modelNumber = 12;
+        double netCost = 13;
+        repeated Levy levies = 14;
+        int32 availableQuantity = 15;
+        int32 reservedQuantity = 16;
+        double totalCost = 17;
+        double sellingCostBeforeTax = 18;
+        float sellingTaxRate = 19;
+        double sellingTaxAmount = 20;
+        double sellingCostAfterTax = 21;
+        string createdDate = 22;
+        string createdBy = 23;
+        string lastModifiedBy = 24;
+        string lastModifiedDate = 25;
+        string recordState = 26;
+        int64 referencedBy = 27;
+        string currency = 28;
+    }
+    Data data = 3;
+}
+
+message RawResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Item {
+        int32 id = 1;
+        string name = 2;
+        string displayName = 3;
+        string alignment = 4;
+        bool sortable = 5;
+    }
+    message Rows {
+        map<string, string> Row = 1;
+    }
+    message Option {
+        repeated Item columns = 1;
+        repeated Rows data = 2;
+    }
+    message Data {
+        Option levies = 1;
+        Option categories = 2;
+        string currency = 3;
+    }
+    Data data = 3;
+}
+
+message SimpleResponse {
+    int32 statusCode = 1;
+    string message = 2;
+
+    message Data {
+        int32 reservedQuantity = 1;
+        int32 availableQuantity = 2;
+    }
+    Data data = 3;
+}
+
+service Item {
+    rpc Raw(RawRequest) returns (RawResponse);
+    rpc Create(CreateRequest) returns (DataResponse);
+    rpc Get(GetRequest) returns (DataResponse);
+    rpc Update(UpdateRequest) returns (DataResponse);
+    rpc Action(ActionRequest) returns (DataResponse);
+    rpc AdjustProductQuantity(ProductQuantityRequest) returns (SimpleResponse);
+}

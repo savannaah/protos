@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package applicationproto;
+
+message RequestHeader {
+    string token = 1;
+}
+
+message Item {
+    int32 id = 1;
+    string name = 2;
+    string displayName = 3;
+    string alignment = 4;
+    bool sortable = 5;
+}
+
+message DataField {
+    int32 id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message Rows {
+    map<string, string> Row = 1;
+}
+
+message MasterDataRequest {
+    RequestHeader header = 1;
+}
+
+message DataRequest {
+    RequestHeader header = 1;
+    string name = 2;
+}
+
+message ApplicationContentRequest {
+    RequestHeader header = 1;
+    string name = 2;
+    string query = 3;
+}
+
+message ReferencedContentRequest {
+    RequestHeader header = 1;
+    string name = 2;
+    repeated int32 ids = 3;
+}
+
+message MasterDataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string username = 2;
+        string avatar = 3;
+        string fullName = 4;
+        string customerName = 5;
+        repeated DataField dashboards = 6;
+        repeated DataField applications = 7;
+    }
+    Data data = 3;
+}
+
+message ApplicationDataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string name = 1;
+        repeated Item columns = 2;
+        repeated DataField relatedRecords = 3;
+    }
+    Data data = 3;
+}
+
+message ReferencedDataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string name = 1;
+        repeated Item columns = 2;
+    }
+    Data data = 3;
+}
+
+message ContentResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string name = 1;
+        repeated Rows rows = 2;
+    }
+    Data data = 3;
+}
+
+service Application {
+    rpc GetMasterData(MasterDataRequest) returns (MasterDataResponse);
+    rpc GetApplicationData(DataRequest) returns (ApplicationDataResponse);
+    rpc GetReferencedData(DataRequest) returns (ReferencedDataResponse);
+    rpc GetApplicationContent(ApplicationContentRequest) returns (ContentResponse);
+    rpc GetReferencedContent(ReferencedContentRequest) returns (ContentResponse);
+}

@@ -1,0 +1,175 @@
+syntax = "proto3";
+
+package employeeproto;
+
+message RequestHeader {
+    string token = 1;
+}
+
+message CreateField {
+    string avatar = 1;
+    string prefix = 2;
+    string firstName = 3;
+    string middleName = 4;
+    string lastName = 5;
+    string contactEmail = 6;
+    string contactMobile = 7;
+    string contactPhone = 8;
+    string addressStreet = 9;
+    string addressCity = 10;
+    string addressPostCode = 11;
+    string addressState= 12;
+    string addressCountry = 13;
+    string emergencyContactFullName = 14;
+    string emergencyContactMobile = 15;
+    string emergencyContactRelationship = 16;
+    string employeeTitle = 17;
+    int32 supervisorID = 18;
+    string hiredDate = 19;
+    bool savannaahUser = 20;
+    string username = 21;
+    string password = 22;
+    string confirmPassword = 23;
+    string timeZone = 24;
+    string currency = 25;
+    int32 roleID = 26;
+    repeated int32 warehouses = 27;
+}
+
+message UpdateField {
+    string avatar = 1;
+    string prefix = 2;
+    string firstName = 3;
+    string middleName = 4;
+    string lastName = 5;
+    string contactEmail = 6;
+    string contactMobile = 7;
+    string contactPhone = 8;
+    string addressStreet = 9;
+    string addressCity = 10;
+    string addressPostCode = 11;
+    string addressState= 12;
+    string addressCountry = 13;
+    string emergencyContactFullName = 14;
+    string emergencyContactMobile = 15;
+    string emergencyContactRelationship = 16;
+    string employeeTitle = 17;
+    int32 supervisorID = 18;
+    string hiredDate = 19;
+    string timeZone = 20;
+    string currency = 21;
+    int32 roleID = 22;
+    repeated int32 warehouses = 23;
+}
+
+message RawRequest {
+    RequestHeader header = 1;
+}
+
+message LoginCredentialRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    message Data {
+        bool savannaahUser = 1;
+        string username = 2;
+        string password = 3;
+        string confirmPassword = 4;
+    }
+    Data data = 3;
+}
+
+message GetRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+}
+
+message CreateRequest {
+    RequestHeader header = 1;
+    CreateField field = 2;
+}
+
+message UpdateRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    UpdateField field = 3;
+}
+
+message ActionRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    string name = 3;
+}
+
+message DataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string id = 1;
+        string avatar = 2;
+        string prefix = 3;
+        string firstName = 4;
+        string middleName = 5;
+        string lastName = 6;
+        string contactEmail = 7;
+        string contactMobile = 8;
+        string contactPhone = 9;
+        string addressStreet = 10;
+        string addressCity = 11;
+        string addressPostCode = 12;
+        string addressState= 13;
+        string addressCountry = 14;
+        string emergencyContactFullName = 15;
+        string emergencyContactMobile = 16;
+        string emergencyContactRelationship = 17;
+        string employeeTitle = 18;
+        int32 supervisorID =19;
+        string supervisor = 20;
+        string hiredDate = 21;
+        bool savannaahUser = 22;
+        string username = 23;
+        string timeZone = 24;
+        string currency = 25;
+        string role= 26;
+        string clientName = 27;
+        string createdDate = 28;
+        string createdBy = 29;
+        string lastModifiedBy = 30;
+        string lastModifiedDate = 31;
+        string recordState = 32;
+        string lastLogin = 33;
+        repeated int32 warehouses = 34;
+        bool editable = 35;//false if requested user has same level of role as this record else true otherwise
+        int64 referencedBy = 36;//number of records that referenced this record
+    }
+    Data data = 3;
+}
+
+message RawResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Role {
+        int32 id = 1;
+        string name = 2;
+    }
+    message Data {
+        repeated string timeZone = 1;
+        repeated string currency = 2;
+        repeated Role roles = 3;
+    }
+    Data data = 3;
+}
+
+message SimpleResponse {
+    int32 statusCode = 1;
+    string message = 2;
+}
+
+service Employee {
+    rpc Raw(RawRequest) returns (RawResponse);
+    rpc Create(CreateRequest) returns (DataResponse);
+    rpc Get(GetRequest) returns (DataResponse);
+    rpc Update(UpdateRequest) returns (DataResponse);
+    rpc Action(ActionRequest) returns (DataResponse);
+    rpc UpdateLoginCredential(LoginCredentialRequest) returns (SimpleResponse);
+
+}

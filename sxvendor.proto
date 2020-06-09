@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package vendorproto;
+
+message RequestHeader {
+    string token = 1;
+}
+
+message RequestField {
+    string code = 1;
+    string name = 2;
+    string description = 3;
+    string contactEmail = 4;
+    string contactMobile = 5;
+    string contactPhone = 6;
+    string addressStreet = 7;
+    string addressCity = 8;
+    string addressPostCode = 9;
+    string addressState= 10;
+    string addressCountry = 11;
+}
+
+message GetRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+}
+
+message CreateRequest {
+    RequestHeader header = 1;
+    RequestField field = 2;
+}
+
+message UpdateRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    RequestField field = 3;
+}
+
+message ActionRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    string name = 3;
+}
+
+message BalanceRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    message Data {
+        double amount = 1;
+    }
+    Data data = 3;
+}
+
+message DataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string id = 1;
+        string name = 2;
+        string code = 3;
+        string description = 4;
+        string contactEmail = 5;
+        string contactMobile = 6;
+        string contactPhone = 7;
+        string addressStreet = 8;
+        string addressCity = 9;
+        string addressPostCode = 10;
+        string addressState = 11;
+        string addressCountry = 12;
+        string displayBalanceAmount = 13;
+        double balanceAmount = 14;
+        string createdDate = 15;
+        string createdBy = 16;
+        string lastModifiedDate = 17;
+        string lastModifiedBy = 18;
+        string recordState = 19;
+        int64 referencedBy = 20;//number of records that referenced this record
+    }
+    Data data = 3;
+}
+
+message SimpleResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string displayBalanceAmount = 1;
+        double balanceAmount = 2;
+    }
+    Data data = 3;
+}
+
+service Vendor {
+    rpc Create(CreateRequest) returns (DataResponse);
+    rpc Get(GetRequest) returns (DataResponse);
+    rpc Update(UpdateRequest) returns (DataResponse);
+    rpc Action(ActionRequest) returns (DataResponse);
+    rpc AdjustBalance(BalanceRequest) returns (SimpleResponse);
+}

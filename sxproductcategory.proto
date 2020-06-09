@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package categoryproto;
+
+message RequestHeader {
+    string token = 1;
+}
+
+message RequestField {
+    string name = 1;
+    string description = 2;
+}
+
+message GetRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+}
+
+message CreateRequest {
+    RequestHeader header = 1;
+    RequestField field = 2;
+}
+
+message UpdateRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    RequestField field = 3;
+}
+
+message ActionRequest {
+    RequestHeader header = 1;
+    int32 id = 2;
+    string name = 3;
+}
+
+message DataResponse {
+    int32 statusCode = 1;
+    string message = 2;
+    message Data {
+        string id = 1;
+        string name = 2;
+        string description = 3;
+        string createdDate = 4;
+        string createdBy = 5;
+        string lastModifiedDate = 6;
+        string lastModifiedBy = 7;
+        string recordState = 8;
+        int64 referencedBy = 9;//number of records that referenced this record
+    }
+    Data data = 3;
+}
+
+service Category {
+    rpc Create(CreateRequest) returns (DataResponse);
+    rpc Get(GetRequest) returns (DataResponse);
+    rpc Update(UpdateRequest) returns (DataResponse);
+    rpc Action(ActionRequest) returns (DataResponse);
+}
